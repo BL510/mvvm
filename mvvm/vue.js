@@ -7,6 +7,7 @@ function Vue (options) {
   // 把 data 中的成员注入 Vue 实例的第一层属性
   this._proxyData()
   // 数据劫持：把data中的所有成员转换成setter / getter
+  new Observer(this.$data)
 
   // 编译模板
   new Compiler(this)
