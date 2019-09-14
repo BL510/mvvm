@@ -36,6 +36,18 @@ Compiler.prototype = {
   },
   // 编译文本节点
   compileText (node) {
+    // console.dir(node)
+    // 匹配差值表达式的正则表达式
+    // () 是正则表达式中的分组，分组匹配到的结果可以通过 RexExp.$1。。。
+    const reg = /\{\{(.+)\}\}/
+    // 文本节点的内容  Name: {{ name }}
+    const value = node.textContent
+    // 判断是否匹配
+    if (reg.test(value)) {
+      // 获取差值表达式里面绑定的属性 name
+      const key = RegExp.$1.trim()
+      node.textContent = value.replace(reg, this.vm.$data[key])
+    }
   },
   // 判断是否是文本节点
   isTextNode (node) {
