@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 观察者模式 (发布-订阅)
+    function Dep () {
+      // 所有的订阅者
+      this.subs = []
+    }
+
+    // 添加订阅者
+    Dep.prototype.addSub = function (sub) {
+      // 订阅者是一个对象，这个对象必须包含update方法
+      if (sub && sub.update) {
+        this.subs.push(sub)
+      }
+    }
+
+    // 发布通知
+    Dep.prototype.notify = function () {
+      this.subs.forEach(sub => {
+        sub.update()
+      })
+    }
+
+    // 订阅者
+    function Watcher () {
+    }
+    Watcher.prototype.update = function () {
+      console.log('update')
+    }
+
+
+    // 观察者
+    var dep = new Dep()
+    // 订阅者
+    var watcher = new Watcher()
+
+    // 添加订阅者
+    dep.addSub(watcher)
+
+    // 通知订阅者执行
+    dep.notify()
+  
+  </script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 严格模式  在作用域的最前面写
+    'use strict'
+
+
+    // 1. Object.defineProperty()
+    var obj = {
+      name: 'zs',
+      age: 18,
+      salary: 2000
+    }
+
+    // vm 对象，可以拦截给属性赋值，或者获取属性的值
+    var vm = {}
+    // 遍历obj的所有属性
+    Object.keys(obj).forEach(key => {
+      // 把obj的所有属性都转换成getter和setter挂载到vm上
+      Object.defineProperty(vm, key, {
+        // 可枚举（可以遍历属性），默认 false，如果为true才可以遍历属性
+        enumerable: true,
+        // 是否可以配置,如果为false，不可以删除该属性，不可以重新defineProperty
+        configurable: false,
+        // 只读属性, 不能和get/set同时使用
+        writable: false,
+        value: 'x'
+        // get () {
+        //   console.log('get', key, obj[key])
+        //   return obj[key]
+        // },
+        // set (value) {
+        //   obj[key] = value
+        //   console.log('set', key, value)
+        // }
+      })
+    })
+
+    // 演示不可以配置
+    // delete vm.name
+
+    // 遍历vm中的属性
+    // console.log(vm)
+    for (var key in vm) {
+      console.log(key)
+    }
+
+    // 只读属性
+    // Array.prototype = 1
+    vm.name = 'xxx'
+
+
+  </script>
+</body>
+</html>

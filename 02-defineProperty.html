@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 1. Object.defineProperty()
+    var obj = {
+      name: 'zs',
+      age: 18,
+      salary: 2000
+    }
+
+    // vm 对象，可以拦截给属性赋值，或者获取属性的值
+    var vm = {}
+    // 遍历obj的所有属性
+    Object.keys(obj).forEach(key => {
+      // 把obj的所有属性都转换成getter和setter挂载到vm上
+      Object.defineProperty(vm, key, {
+        get () {
+          console.log('get', key, obj[key])
+          return obj[key]
+        },
+        set (value) {
+          obj[key] = value
+          console.log('set', key, value)
+        }
+      })
+    })
+
+    
+
+
+
+  </script>
+</body>
+</html>

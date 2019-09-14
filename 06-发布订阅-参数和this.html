@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 发布订阅模式  -- 消息(事件)机制
+
+    // bus.$on(事件名称, 事件处理函数)    注册事件   订阅消息(事件)
+    // bus.$emit(事件名称, 参数)         发布事件   发布消息(事件)
+
+
+    function EventEmitter () {
+      // 订阅者
+      // { 'click': [fn1, fn2, fn3], 'move': [fn1] }
+      // {}
+      // {'click': [fn]}
+      this.subs = {}
+    }
+    // 注册事件
+    EventEmitter.prototype.$on = function (eventType, handler) {
+      // if (this.subs[eventType]) {
+      //   // {'click': [fn]}
+      //   this.subs[eventType].push(handler)
+      // } else {
+      //   // {}
+      //   this.subs[eventType] = []
+      //   this.subs[eventType].push(handler)
+      // }
+
+      this.subs[eventType] = this.subs[eventType] || []
+      this.subs[eventType].push(handler)
+    }
+    // 发布事件
+    // ...args 剩余参数 $emit('click', 1, 2)
+    // args --> [1, 2]
+    EventEmitter.prototype.$emit = function (eventType, ...args) {
+      // args  --> [1, 2]
+      if (this.subs[eventType]) {
+        this.subs[eventType].forEach(handler => {
+          handler.apply(this, args)
+        })
+      }
+    }
+
+
+    // bus.$on('click', fn1)
+    // bus.$on('click', fn2)
+    // bus.$on('click', fn3)
+    // bus.$on('click', ...)
+
+    var bus = new EventEmitter()
+
+    // 注册事件
+    bus.$on('click', function (a, b) {
+      console.log(a + b)
+      console.log(this)
+      console.log('click')
+    })
+
+    bus.$on('click', function () {
+      console.log('click1')
+    })
+
+    // 触发事件
+    bus.$emit('click', 1, 2)
+
+  </script>
+</body>
+</html>

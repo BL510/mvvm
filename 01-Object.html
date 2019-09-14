@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 1. Object.keys()
+
+    // var obj = {
+    //   name: 'zs',
+    //   age: 18
+    // }
+
+    // var arr = Object.keys(obj)
+    // console.log(arr)
+    // arr.forEach()
+
+    // 2. Object.defineProperty()
+
+    var obj = {
+      name: 'zs',
+      age: 18,
+      salary: 2000
+    }
+
+    // obj.salary = 10000
+    // obj.name = 'ls'
+    var _salary = 100
+    Object.defineProperty(obj, 'salary', {
+      // value: 10000,
+      // 获取属性的值
+      get () {
+        console.log('get')
+        return _salary
+      },
+      // 设置属性的值
+      set (value) {
+        console.log('set')
+        
+        _salary = value
+      }
+    })
+
+    console.log(obj)
+
+  </script>
+</body>
+</html>
