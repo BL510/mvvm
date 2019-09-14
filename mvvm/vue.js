@@ -5,7 +5,7 @@ function Vue (options) {
   this.$data = options.data || {}
 
   // 把 data 中的成员注入 Vue 实例的第一层属性
-
+  this._proxyData()
   // 数据劫持：把data中的所有成员转换成setter / getter
 
   // 编译模板
@@ -13,5 +13,19 @@ function Vue (options) {
 
 // 把data中的第一层属性注入到 Vue 实例上
 Vue.prototype._proxyData = function () {
-
+  // 遍历 data 中的第一层属性
+  Object.keys(this.$data).forEach(key => {
+    // 把属性转换成 getter/setter
+    Object.defineProperty(this, key, {
+      // 属性描述符
+      configurable: false,
+      enumerable: true,
+      get () {
+        return this.$data[key]
+      },
+      set (value) {
+        this.$data[key] = value
+      }
+    })
+  })
 }
