@@ -35,6 +35,25 @@ Compiler.prototype = {
   // 编译元素节点
   compileElement (node) {
     // v-text="dog.name"
+    // <input type="text" v-model="name">
+    // 处理元素中的vue的指令
+    // console.dir(node)
+    // 遍历所有的属性节点
+    Array.from(node.attributes).forEach(attrNode => {
+      // type   v-model
+      let name = attrNode.name
+      // type='text'  v-model="name"
+      let value = attrNode.value
+      // 判断该属性节点是否是指令
+      if (this.isDirective(name)) {
+        // 去掉指令中的 v-
+        // 此时的name对应 compileUtil中处理指令的方法的名字
+        name = name.substr(2)
+        
+        // 直接调用compileUtil中对应的方法
+        compileUtil[name] && compileUtil[name](node, this.vm, value)
+      }
+    })
   },
   // 编译文本节点
   compileText (node) {
@@ -71,14 +90,17 @@ const compileUtil = {
   },
   // v-text
   text (node, vm, expr) {
+    node.textContent = this.getVMValue(vm, expr)
   },
   // v-html
   html (node, vm, expr) {
+    node.innerHTML = this.getVMValue(vm, expr)
   },
   // v-model
   model (node, vm, expr) {
+    node.value = this.getVMValue(vm, expr)
   },
-  // 获取绑定的属性的值
+  // 获取差值表达式/指令绑定的属性的值
   // vm Vue的实例，需要 data
   // expr  绑定的属性的名字 name / dog.name
   getVMValue (vm, expr) {
@@ -97,6 +119,7 @@ const compileUtil = {
     // 最终 data 中的值，是我们获取到属性对应的值
     return data
   },
+  // 设置差值表达式/指令绑定的属性的值
   setVMValue (vm, expr, value) {
     let data = vm.$data
 
