@@ -100,6 +100,21 @@ const compileUtil = {
     return data
   },
   setVMValue (vm, expr, value) {
+    let data = vm.$data
 
+    // expr -- 'name'
+    //    data[key] = value
+    // expr -- 'dog.name'
+    //    
+    const arr = expr.split('.')
+    arr.forEach((key, index) => {
+      // 如果当前属性的索引  =  数组的最后一项，设置 data[key] = value
+      if (index < arr.length - 1) {
+        data = data[key]
+      } else {
+        // 最后一项
+        data[key] = value
+      }
+    })
   }
 }
