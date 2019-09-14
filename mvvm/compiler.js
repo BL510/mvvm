@@ -99,6 +99,15 @@ const compileUtil = {
   // v-model
   model (node, vm, expr) {
     node.value = this.getVMValue(vm, expr)
+    const oldValue = node.value
+    // 当文本框的数据发生变化，更新 data
+    node.addEventListener('input', (e) => {
+      const newValue = e.target.value
+      if (oldValue === newValue) {
+        return
+      }
+      this.setVMValue(vm, expr, newValue)
+    })
   },
   // 获取差值表达式/指令绑定的属性的值
   // vm Vue的实例，需要 data
