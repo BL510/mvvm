@@ -9,6 +9,7 @@ function Vue (options) {
   // 数据劫持：把data中的所有成员转换成setter / getter
 
   // 编译模板
+  new Compiler(this)
 }
 
 // 把data中的第一层属性注入到 Vue 实例上
@@ -24,6 +25,10 @@ Vue.prototype._proxyData = function () {
         return this.$data[key]
       },
       set (value) {
+        // 如果设置的值和data中现有的值相同，不做任何处理
+        if (value === this.$data[key]) {
+          return
+        }
         this.$data[key] = value
       }
     })
