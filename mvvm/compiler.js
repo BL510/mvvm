@@ -27,12 +27,14 @@ Compiler.prototype = {
 
       // 如果当前遍历到的node中还有子节点，继续编译
       if (node.childNodes && node.childNodes.length > 0) {
+        // 递归调用，深度遍历子节点
         this.compile(node)
       }
     })
   },
   // 编译元素节点
   compileElement (node) {
+    // v-text="dog.name"
   },
   // 编译文本节点
   compileText (node) {
@@ -40,13 +42,14 @@ Compiler.prototype = {
     // 匹配差值表达式的正则表达式
     // () 是正则表达式中的分组，分组匹配到的结果可以通过 RexExp.$1。。。
     const reg = /\{\{(.+)\}\}/
-    // 文本节点的内容  Name: {{ name }}
+    // 文本节点的内容  Name: {{ name }}      abc
+    // 如果绑定的属性是  {{ dog.name }} 有问题
     const value = node.textContent
     // 判断是否匹配
     if (reg.test(value)) {
       // 获取差值表达式里面绑定的属性 name
       const key = RegExp.$1.trim()
-      node.textContent = value.replace(reg, this.vm.$data[key])
+      node.textContent = value.replace(reg, compileUtil.getVMValue(this.vm, key))
     }
   },
   // 判断是否是文本节点
@@ -60,5 +63,43 @@ Compiler.prototype = {
   // 判断当前属性是否是vue的指令   v-html  v-text
   isDirective (attr) {
     return attr.startsWith('v-')
+  }
+}
+
+// 封装一个方便处理编译模板的对象
+const compileUtil = {
+  // 处理差值表达式
+  mustache (node, vm) {
+  },
+  // v-text
+  text (node, vm, expr) {
+  },
+  // v-html
+  html (node, vm, expr) {
+  },
+  // v-model
+  model (node, vm, expr) {
+  },
+  // 获取绑定的属性的值
+  // vm Vue的实例，需要 data
+  // expr  绑定的属性的名字 name / dog.name
+  getVMValue (vm, expr) {
+    let data = vm.$data
+    // expr = name
+    // data = data[expr]
+    // expr = dog.name
+    
+    // expr = name --> ['name']
+    // expr = dog.name --->  ['dog', 'name']  >>> 1. data=data['dog']  2. data=data['name']
+    // data = { name: 'zx', dog: { name: 'byd' } }
+    expr.split('.').forEach(key => {
+      data = data[key]
+    })
+
+    // 最终 data 中的值，是我们获取到属性对应的值
+    return data
+  },
+  setVMValue (vm, expr, value) {
+
   }
 }
