@@ -21,6 +21,9 @@ Observer.prototype = {
   },
   // 把属性设置为响应式数据
   defineReactive (data, key, value) {
+    // 记录当前的this
+    const that = this
+    this.walk(value)
     Object.defineProperty(data, key, {
       // 属性描述符
       configurable: false,
@@ -32,10 +35,12 @@ Observer.prototype = {
         if (value === newValue) {
           return
         }
+        // 在设置值的时候，如果newValue 是对象，设置为响应式数据
+        that.walk(newValue)
         value = newValue
 
         // 数据变化，通知订阅者，数据发生变化要去更新视图
-        
+
       }
     })
   }
