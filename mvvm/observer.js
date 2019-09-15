@@ -40,7 +40,9 @@ Observer.prototype = {
         value = newValue
 
         // 数据变化，通知订阅者，数据发生变化要去更新视图
+        dep.notify()
 
+        // dep.addSub(watcher)
       }
     })
   }
