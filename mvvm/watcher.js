@@ -5,7 +5,7 @@ function Watcher (vm, expr, cb) {
   // 数据data的属性 name, dog.name
   this.expr = expr
   // 回调函数，更新视图的回调函数
-  this.cb
+  this.cb = cb
   // 给Dep.target 设置当前实例，在 get 的时候会调用
   Dep.target = this
   this.oldValue = this.getVMValue()

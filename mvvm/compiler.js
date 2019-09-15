@@ -86,15 +86,29 @@ const compileUtil = {
       // 获取差值表达式里面绑定的属性 name
       const key = RegExp.$1.trim()
       node.textContent = value.replace(reg, this.getVMValue(vm, key))
+
+      // 创建watcher，当数据发生变化的时候更新视图
+      new Watcher(vm, key, (newValue) => {
+        node.textContent = value.replace(reg, newValue)
+      })
     }
   },
   // v-text
   text (node, vm, expr) {
     node.textContent = this.getVMValue(vm, expr)
+    // 创建watcher，当数据发生变化的时候更新视图
+    new Watcher(vm, expr, (newValue) => {
+      node.textContent = newValue
+    })
   },
   // v-html
   html (node, vm, expr) {
     node.innerHTML = this.getVMValue(vm, expr)
+
+    // 创建watcher，当数据发生变化的时候更新视图
+    new Watcher(vm, expr, (newValue) => {
+      node.innerHTML = newValue
+    })
   },
   // v-model
   model (node, vm, expr) {
@@ -107,6 +121,10 @@ const compileUtil = {
         return
       }
       this.setVMValue(vm, expr, newValue)
+    })
+    // 创建watcher，当数据发生变化的时候更新视图
+    new Watcher(vm, expr, (newValue) => {
+      node.value = newValue
     })
   },
   // 获取差值表达式/指令绑定的属性的值

@@ -24,11 +24,16 @@ Observer.prototype = {
     // 记录当前的this
     const that = this
     this.walk(value)
+    // 属性的监听器
+    const dep = new Dep()
     Object.defineProperty(data, key, {
       // 属性描述符
       configurable: false,
       enumerable: true,
       get () {
+        // 当触发 get 的时候
+        // 把watcher添加到属性的监听器中 subs
+        Dep.target && dep.addSub(Dep.target)
         return value
       },
       set (newValue) {
